@@ -3,7 +3,7 @@
 // Also includes automatic tab switching after 5 seconds
 //.test_tab_link
 //.test_tab_pane
-//#progress_bar
+//#progress_barz
 
 
 // Wait for both DOM content and Finsweet List Tabs to be ready

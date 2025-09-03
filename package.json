@@ -1,0 +1,23 @@
+{
+  "name": "testimonial_tab_progress",
+  "version": "1.0.0",
+  "description": "",
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel script.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akash-atom/testimonial_tab_progress.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akash-atom/testimonial_tab_progress/issues"
+  },
+  "homepage": "https://github.com/akash-atom/testimonial_tab_progress#readme",
+  "dependencies": {
+    "parcel": "^2.15.4"
+  }
+}

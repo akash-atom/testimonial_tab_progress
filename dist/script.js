@@ -670,10 +670,8 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 // Testimonial Tab Progress Bar Animation
 // This script animates the progress bar from 0% to 100% over 5 seconds when a tab is active
 // Also includes automatic tab switching after 5 seconds
-//.test_tab_link
-//.test_tab_pane
-//#progress_bar
 // Wait for both DOM content and Finsweet List Tabs to be ready
+let isInitialized = false; // Prevent multiple initializations
 document.addEventListener('DOMContentLoaded', function() {
     // Try to initialize immediately
     initProgressBarAnimation();
@@ -691,6 +689,7 @@ function setupFinsweetCompatibility() {
             // Wait for Finsweet to complete its DOM manipulation
             setTimeout(()=>{
                 initProgressBarAnimation();
+                isInitialized = true;
             }, 1500);
             return result;
         };
@@ -720,6 +719,7 @@ function setupFinsweetCompatibility() {
             });
             if (hasContent) {
                 initProgressBarAnimation();
+                isInitialized = true;
                 return true;
             } else return false;
         }
@@ -815,6 +815,8 @@ function setupFinsweetCompatibility() {
     }, 2000); // Wait 2 seconds for Finsweet to finish initial setup
 }
 function initProgressBarAnimation() {
+    // Prevent multiple simultaneous initializations
+    if (isInitialized && document.querySelectorAll('.test_tab_link, [fs-list-element="tabs"] .w-tab, .w-tab').length > 0) return;
     // Try multiple selectors to find tab links (Finsweet compatibility)
     let tabLinks = document.querySelectorAll('.test_tab_link');
     // If no custom class found, try Finsweet's generated structure
@@ -886,8 +888,7 @@ function updateProgressBars() {
                 // Resume animation from current width to 100% with remaining time
                 gsap.to(progressBar, {
                     width: '100%',
-                    duration: remainingTime,
-                    ease: 'power2.out'
+                    duration: remainingTime
                 });
                 // Remove from paused list
                 pausedProgressBars.delete(progressBar);
@@ -1079,23 +1080,25 @@ window.testimonialProgressBar = {
         // Reinitialize the system (useful when Finsweet updates tabs)
         stopAutoSwitch();
         resetAllProgressBars();
+        isInitialized = false; // Reset flag to allow reinitialization
         initProgressBarAnimation();
+        isInitialized = true;
     }
 };
 // Listen for Finsweet list updates (filtering, sorting, etc.)
-if (window.fsAttributes) {
+if (window.fsAttributes && window.fsAttributes.list && window.fsAttributes.list.update) {
     // Override the list update method to reinitialize our system
     const originalUpdate = window.fsAttributes.list.update;
-    if (originalUpdate) window.fsAttributes.list.update = function(...args) {
+    window.fsAttributes.list.update = function(...args) {
         const result = originalUpdate.apply(this, args);
         // Reinitialize our system after Finsweet updates
         setTimeout(()=>{
-            window.testimonialProgressBar.reinit();
+            if (window.testimonialProgressBar && window.testimonialProgressBar.reinit) window.testimonialProgressBar.reinit();
         }, 500);
         return result;
     };
 }
 
-},{}]},["3O61n","6rimH"], "6rimH", "parcelRequire0e1d", {})
+},{}]},["3O61n","6rimH"], "6rimH", "parcelRequirea5a2", {})
 
 //# sourceMappingURL=script.js.map
